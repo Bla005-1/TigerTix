@@ -5,5 +5,7 @@ const { listEvents, newEvent, patchEvent } = require('../controllers/adminContro
 router.get('/events', listEvents);
 
 router.post('/events', newEvent);
+
+router.put('/events', patchEvent);
  
 module.exports = router; 
