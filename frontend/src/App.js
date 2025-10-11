@@ -3,6 +3,7 @@ import './App.css';
   
 function App() { 
   const [events, setEvents] = useState([]);
+  const [statusMessage, setStatusMessage] = useState('');
  
   const fetchEvents = () => {
     fetch('http://localhost:6001/api/events') 
@@ -10,7 +11,7 @@ function App() {
       .then((data) => setEvents(data)) 
       .catch((err) => {
         console.error(err);
-        alert('Event loading failed.')
+        setStatusMessage('Event loading failed.')
       }); 
   }; 
   useEffect(() => { fetchEvents(); }, []);
@@ -20,32 +21,68 @@ function App() {
       .then(async (res) => {
         const body = await res.json().catch(() => ({}));
         if (res.ok) {
-          alert(`Ticket purchased for: ${eventName}`);
+          setStatusMessage(`Ticket purchased for: ${eventName}`);
           fetchEvents();
         } else {
           const msg = body?.error || 'Purchase failed.';
-          alert(msg);
+          setStatusMessage(msg);
         }
       })
       .catch((err) => {
         console.error(err);
-        alert('Server error. Please try again.');
+        setStatusMessage('Server error. Please try again.');
       });
   }; 
  
   return ( 
     <div className="App"> 
-      <h1>Clemson Campus Events</h1> 
-      <ul> 
-        {events.map((event) => ( 
-          <li key={event.id}> 
-            {event.name} - {event.date} - {event.tickets_available}{' '} 
-            <button onClick={() => buyTicket(event.id, event.name)}>Buy Ticket</button> 
-          </li> 
-        ))} 
-      </ul> 
-    </div> 
-  ); 
-} 
+      <header>
+        <h1 id="page-title">Clemson Campus Events</h1>
+      </header>
+
+      <div aria-live="polite" className="status">
+        {statusMessage}
+      </div>
+
+      <main role="main">
+        <ul aria-labelledby="page-title">
+          {events.map((event) => {
+            const soldOut = Number(event.tickets_available) <= 0;
+            return (
+              <li key={event.id} className="event-item">
+                <div className="event-row" role="group" aria-label={`Event ${event.name}`}>
+                  <span className="col-name" title={event.name}>
+                    {event.name}
+                  </span>
+
+                  <time className="col-date" dateTime={event.date}>
+                    {event.date}
+                  </time>
+
+                  <span
+                    className="col-tickets"
+                    aria-label={`${event.tickets_available} ${event.tickets_available === 1 ? 'ticket' : 'tickets'} available`}
+                  >
+                    {event.tickets_available} {event.tickets_available === 1 ? 'ticket' : 'tickets'}
+                  </span>
+
+                  <button
+                    className="col-action"
+                    onClick={() => buyTicket(event.id, event.name)}
+                    aria-label={`Buy ticket for ${event.name}`}
+                    disabled={soldOut}
+                    aria-disabled={soldOut}
+                  >
+                    {soldOut ? 'Sold Out' : 'Buy Ticket'}
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </main>
+    </div>
+  );
+}
  
 export default App; 
