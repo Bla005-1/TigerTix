@@ -1,4 +1,4 @@
-// Mock data for Clemson events 
+// mock data until db is together
 const getEvents = () => { 
   return [ 
     { id: 1, name: 'Clemson Football Game', date: '2025-09-01' }, 
@@ -6,5 +6,9 @@ const getEvents = () => {
     { id: 3, name: 'Career Fair', date: '2025-09-15' } 
   ]; 
 }; 
- 
-module.exports = { getEvents }; 
+
+const purchaseOneTicket = () => { 
+  return 'NOT_FOUND';
+}; 
+
+module.exports = { getEvents, purchaseOneTicket }; 
