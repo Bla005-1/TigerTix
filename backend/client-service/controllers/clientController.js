@@ -1,15 +1,15 @@
 const { getEvents, purchaseOneTicket } = require('../models/clientModel'); 
  
-const listEvents = (req, res, next) => {
+const listEvents = async (req, res, next) => {
   try {
-    const events = getEvents(); 
+    const events = await getEvents(); 
     res.json(events);
   } catch(err) {
     next(err);
   }
-}; 
+};
 
-const purchaseTicket = (req, res, next) => {
+const purchaseTicket = async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
@@ -18,7 +18,7 @@ const purchaseTicket = (req, res, next) => {
       throw error;
     }
 
-    const result = purchaseOneTicket(id);
+    const result = await purchaseOneTicket(id);
 
     if (result === 'NOT_FOUND') {
         const error = new Error('Event not found.');

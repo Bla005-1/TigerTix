@@ -1,31 +1,23 @@
-const { db } = require('../../shared-db/setup')
+const { all, get, run } = require('../../shared-db/setup')
 
-/*const getEvents = () => { 
-  return [ 
-    { id: 1, name: 'Clemson Football Game', date: '2025-09-01', tickets_available: 1 }, 
-    { id: 2, name: 'Campus Concert', date: '2025-09-10', tickets_available: 1 }, 
-    { id: 3, name: 'Career Fair', date: '2025-09-15', tickets_available: 1 } 
-  ]; 
-};*/
+const getEvents = async () => {
+  const rows = await all('SELECT id, name, date, tickets_available FROM events ORDER BY date ASC;');
+  return Array.isArray(rows) ? rows : [];
+};
 
-const getEvents = () => {
-  let sql = 'SELECT * FROM events';
+const purchaseOneTicket = async (id) => {
+  const result = await run(
+    'UPDATE events SET tickets_available = tickets_available - 1 WHERE id = ? AND tickets_available > 0;',
+    [id]
+  );
 
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      console.log('Could not pull from database');
-      return [];
-    }
-    else {
-      console.log(rows);
-      return rows;
-    }
-  });
-}; 
+  if (result.changes === 1) return id;
 
-const purchaseOneTicket = (id) => {
-  if (id == 1) { return id };  // for testing until db is alive
-  return 'NOT_FOUND';
-}; 
+  const row = await get('SELECT tickets_available FROM events WHERE id = ?;', [
+    id,
+  ]);
+  if (!row) return 'NOT_FOUND';
+  return 'SOLD_OUT';
+};
 
 module.exports = { getEvents, purchaseOneTicket }; 

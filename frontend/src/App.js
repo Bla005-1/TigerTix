@@ -10,6 +10,7 @@ function App() {
       .then((res) => res.json()) 
       .then((data) => setEvents(data)) 
       .catch((err) => {
+        setEvents([]);
         console.error(err);
         setStatusMessage('Event loading failed.')
       }); 
