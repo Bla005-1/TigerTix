@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    date TEXT NOT NULL,
+    date DATE NOT NULL,
     tickets_available INTEGER NOT NULL,
     UNIQUE (name, date)
 );
