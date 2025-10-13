@@ -10,6 +10,14 @@ app.use(cors());
 app.use('/api', routes);
 const PORT = 5001;
 
+// Error handler middleware
+app.use((err, req, res, next) => {
+  console.error(err.message);
+  res.status(err.statusCode || 500).json({
+    error: err.message || 'Internal Server Error'
+  });
+});
+
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
 
 //$ curl -X POST 'http://localhost:5001/api/events' -H 'Content-Type: application/json' -d '{"id":1,"name":"Clemson Football Game","date":"2025-09-01","tickets_available":500}'
