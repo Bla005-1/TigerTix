@@ -5,6 +5,7 @@ function App() {
   const [events, setEvents] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
  
+  // Fetches all events from the client microservice and updates state.
   const fetchEvents = () => {
     fetch('http://localhost:6001/api/events') 
       .then((res) => res.json()) 
@@ -17,6 +18,7 @@ function App() {
   }; 
   useEffect(() => { fetchEvents(); }, []);
  
+  // Sends a POST request to purchase a ticket for a given event.
   const buyTicket = (eventID, eventName) => { 
     fetch(`http://localhost:6001/api/events/${eventID}/purchase`, { method: 'POST' })
       .then(async (res) => {
