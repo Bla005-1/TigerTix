@@ -2,14 +2,14 @@ const { getEvents, addEvent, updateEvent } = require('../models/adminModel');
 
 /**
  * Validates event input data for required fields and formats.
- * @param {object} details - The event object containing name, date, and available_tickets.
+ * @param {object} details - The event object containing name, date, and tickets_available.
  * @param {boolean} hasId - Whether the event is expected to include an id field.
  */
 const validateInput = (details, hasId) => {
   let eventDetails = details;
   if (!eventDetails.hasOwnProperty('name') ||
       !eventDetails.hasOwnProperty('date') ||
-      !eventDetails.hasOwnProperty('available_tickets')) {
+      !eventDetails.hasOwnProperty('tickets_available')) {
     const error = new Error('Event details missing a required field');
     error.statusCode = 400;
     throw error;
@@ -27,7 +27,7 @@ const validateInput = (details, hasId) => {
     error.statusCode = 400;
     throw error;
   }
-  else if (eventDetails.available_tickets < 0) {
+  else if (eventDetails.tickets_available < 0) {
     const error = new Error('Invalid ticket amount.');
     error.statusCode = 400;
     throw error;
@@ -80,12 +80,12 @@ const newEvent = async (req, res, next) => {
 const patchEvent = async (req, res, next) => {
   try {
     validateInput(req.body, true);
-    const event = await updateEvent(res);
+    const event = await updateEvent(req.body);
     if (event.changes == 1) {
       res.status(200).send('200: Successfully Updated Event');
     }
     else {
-      const error = new Error('Event not found');
+      const error = new Error('Event Not Found');
       error.statusCode = 404;
       throw error;
     }
