@@ -1,10 +1,11 @@
 const { getEvents, addEvent, updateEvent } = require('../models/adminModel'); 
 
-//need to add error logging
-//need to actually return the events
-
+/**
+ * Validates event input data for required fields and formats.
+ * @param {object} details - The event object containing name, date, and available_tickets.
+ * @param {boolean} hasId - Whether the event is expected to include an id field.
+ */
 const validateInput = (details, hasId) => {
-
   let eventDetails = null;
   try {
     eventDetails = details;
@@ -23,13 +24,13 @@ const validateInput = (details, hasId) => {
     let errorMessage = '';
     const regex = /^\d{4}-\d{2}-\d{2}$/
     if ((!Number.isInteger(eventDetails.id) || eventDetails.id <= 0) && hasId == true) {
-        errorMessage = '400: Invalid ID'
+      errorMessage = '400: Invalid ID'
     }
     else if (eventDetails.available_tickets < 0) {
-        errorMessage = '400: Invalid ticket amount'
+      errorMessage = '400: Invalid ticket amount'
     }
     else if (!regex.test(eventDetails.date)) {
-        errorMessage = '400: Invalid date formatting'
+      errorMessage = '400: Invalid date formatting'
     }
     if (errorMessage != '') {
       res.status(400).send(errorMessage);
@@ -37,6 +38,12 @@ const validateInput = (details, hasId) => {
   }
 }
 
+/**
+ * Retrieves all events from the database and returns them as JSON.
+ * @param {object} req - Express request.
+ * @param {object} res - Express response used to send JSON.
+ * @param {Function} next - Error handler middleware.
+ */
 const listEvents = async (req, res, next) => {
   try {
     const events = await getEvents();
@@ -47,6 +54,12 @@ const listEvents = async (req, res, next) => {
   }
 };
 
+/**
+ * Creates a new event in the database based on validated data.
+ * @param {object} req - Express request.
+ * @param {object} res - Express response used to send JSON.
+ * @param {Function} next - Error handler middleware.
+ */
 const newEvent = async (req, res, next) => {
   try {
     validateInput(req.body);
@@ -59,6 +72,12 @@ const newEvent = async (req, res, next) => {
   
 }
 
+/**
+ * Updates an event in the database based on validated data.
+ * @param {object} req - Express request.
+ * @param {object} res - Express response used to send JSON.
+ * @param {Function} next - Error handler middleware.
+ */
 const patchEvent = async (req, res, next) => {
   try {
     validateInput(req.body, true);
