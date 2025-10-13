@@ -56,7 +56,7 @@ const listEvents = async (req, res, next) => {
 
 /**
  * Creates a new event in the database based on validated data.
- * @param {object} req - Express request.
+ * @param {object} req - Express request containing name, date, and tickets_available.
  * @param {object} res - Express response used to send JSON.
  * @param {Function} next - Error handler middleware.
  */
@@ -73,7 +73,7 @@ const newEvent = async (req, res, next) => {
 
 /**
  * Updates an event in the database based on validated data.
- * @param {object} req - Express request.
+ * @param {object} req - Express request containing id, name, date, and tickets_available.
  * @param {object} res - Express response used to send JSON.
  * @param {Function} next - Error handler middleware.
  */
