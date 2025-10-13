@@ -12,7 +12,7 @@ app.use('/api', clientRoutes);
 app.use((err, req, res, next) => {
   console.error(err.message);
   res.status(err.statusCode || 500).json({
-    error: 'Internal Server Error'
+    error: err.message || 'Internal Server Error'
   });
 });
 
