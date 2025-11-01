@@ -6,7 +6,7 @@ const app = express();
 const PORT = 8001;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.text({ type: 'text/plain' }));
 app.use('/api/llm', llmRoutes);
 
 // Error handler middleware
