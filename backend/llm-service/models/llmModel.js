@@ -6,7 +6,7 @@ const { GoogleGenAI, Type } = require('@google/genai');
  * @returns {Promise<Array>} A list of event objects with name
  */
 const getEvents = async () => {
-  let sql = 'SELECT name FROM events;'
+  let sql = 'SELECT id, name FROM events;'
   const rows = await all(sql);
   return Array.isArray(rows) ? rows : [];
 };
@@ -34,7 +34,7 @@ const parseTextWithLLM = async (text, events) => {
   const ai = new GoogleGenAI({});
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash-lite",
-    contents: `Parse this booking request, determining the event and number of tickets 
+    contents: `Parse this booking request, determining the event id, event name, and number of tickets 
     the user would like and return them in a json. If no ticket number is specified, default to 1. 
     If the event cannot be found set the event to NOT_FOUND and the ticket number to 0. Provide the pure json, DO NOT worry about indenting, spacing or backslashes.
     REQUEST: [${text}]. EVENTS: [${events}]`,
@@ -43,6 +43,9 @@ const parseTextWithLLM = async (text, events) => {
       responseSchema: {
         type: Type.OBJECT,
         properties: {
+          event_id: {
+            type: Type.STRING  //perhaps this should be a int?
+          },
           event: {
             type: Type.STRING,
           },
@@ -53,9 +56,11 @@ const parseTextWithLLM = async (text, events) => {
       },
     },
   });
+  
   const mockResponse = {
-    event: 'Jazz Night',
-    tickets: 2,
+    event_id: 1,
+    event: 'Football Game',
+    tickets: '2',
   };
   const jsonData = JSON.parse(response.text);
   return jsonData;
