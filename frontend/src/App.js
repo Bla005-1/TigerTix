@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './App.css'; 
-  
+import './App.css';
+import VoiceChat from './VoiceChat';
+
 function App() { 
   const [events, setEvents] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
@@ -43,10 +44,13 @@ function App() {
         <h1 id="page-title">Clemson Campus Events</h1>
       </header>
 
-      <div aria-live="polite" className="status">
+      {statusMessage && (<div aria-live="polite" className="status">
         {statusMessage}
-      </div>
-
+      </div>)}
+      <VoiceChat 
+        buyTicket={buyTicket} 
+        setStatusMessage={setStatusMessage}
+      />
       <main role="main">
         <ul aria-labelledby="page-title">
           {events.map((event) => {

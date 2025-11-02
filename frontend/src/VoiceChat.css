@@ -1,0 +1,46 @@
+.voice-chat {
+  background-color: #f56600;
+  color: white;
+  width: 100%;
+  max-width: 700px;
+  padding: 12px;
+  margin-bottom: 1.5rem;
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.voice-chat .transcript, .confirmation {
+  text-align: left;
+  background: rgba(54, 33, 33, 0.349);
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 300px;
+  line-height: 1.4;
+  margin: 5px;
+}
+
+.voice-chat .transcript::before, .confirmation::before {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 2px 6px;
+  margin-right: 6px;
+}
+
+.voice-chat .transcript::before {
+  content: 'User: ';
+}
+.voice-chat .confirmation::before {
+  content: 'Bot: ';
+}
+.voice-chat .controls {
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+.confirmation-controls button {
+  margin: 5px;
+  padding: 7px;
+}

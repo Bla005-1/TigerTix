@@ -16,7 +16,7 @@ header {
   width: 100%;
   padding: 1rem 0;
   margin-bottom: 1.5rem;
-  border-radius: 0 0 10px 10px;
+  border-radius: 10px 10px 10px 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -60,6 +60,7 @@ main li:hover {
   border-radius: 10px;
   text-align: left;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border: 1px solid #000000;
 }
 
 /* 4-column grid: name | date | tickets | action */
