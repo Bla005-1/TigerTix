@@ -7,13 +7,15 @@ const db = new sqlite3.Database(configPath,sqlite3.OPEN_READWRITE|sqlite3.OPEN_C
   if (err) return console.error(err.message);
 });
 
-const initSQL = fs.readFileSync(sqlInitPath, 'utf-8')
-db.exec(initSQL, (err) => {
-  if (err) console.error('Init failed', err);
-  else console.log('Init done!');
-});
-db.run('PRAGMA journal_mode=WAL')
-
+function initDB() {
+  const initSQL = fs.readFileSync(sqlInitPath, 'utf-8')
+  db.exec(initSQL, (err) => {
+    if (err) console.error('Init failed', err);
+    else console.log('Init done!');
+  });
+  db.run('PRAGMA journal_mode=WAL')
+  return db;
+}
 // promise helper functions
 const all = (sql, params = []) =>
   new Promise((resolve, reject) => {
@@ -33,4 +35,4 @@ const run = (sql, params = []) =>
     });
   });
 
-module.exports = { db, all, get, run }
+module.exports = { db, all, get, run, initDB }
