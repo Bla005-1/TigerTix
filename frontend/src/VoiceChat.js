@@ -149,7 +149,7 @@ function VoiceChat({buyTicket, setStatusMessage}) {
   return (
     <div className="voice-chat" aria-label="Voice Assistant">
       <div className="transcript" aria-live="polite">
-        {transcript || 'Press record and start speaking...'}
+        {transcript || 'HI! Press record and start speaking...'}
       </div>
       {confirmationPending && (
         <div className="confirmation">

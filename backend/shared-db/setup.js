@@ -32,11 +32,7 @@ const run = (sql, params = []) =>
     db.run('BEGIN DEFERRED');
     db.run(sql, params, function (err) {
       if (err) {
-        console.log("checking here");
-        db.run('ROLLBACK', params, function (err) {
-          if (err) return reject(err);
-          resolve(this);
-        });
+        db.run('ROLLBACK');
         return reject(err);
       } 
       resolve(this);
