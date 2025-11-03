@@ -11,15 +11,6 @@ const getEvents = async () => {
   return Array.isArray(rows) ? rows : [];
 };
 
-/**
- * Fetches an event from the database
- * @returns {Promise<Array>} Gets a single event with all its properties
- */
-const getEvent = async (name) => {
-  let sql = `SELECT id, name, date, tickets_available FROM events WHERE name = ?;`
-  const row = await get(sql, [name]);
-  return row;
-};
 
 /**
  * Parses a natural-language booking request using an LLM.
@@ -62,18 +53,10 @@ const parseTextWithLLM = async (text, events) => {
     event: 'Football Game',
     tickets: '2',
   };
+  console.log(`${response.text}`);
   const jsonData = JSON.parse(response.text);
   return jsonData;
 }
 
-const bookingConfirmation = async () => {
-  return true;
-}
 
-const bookEvent = async (eventId, numTickets) => {
-  sql = 'UPDATE events SET tickets_available = tickets_available - ? WHERE id = ? AND tickets_available > 0;'
-  const result = await run(sql, [numTickets, eventId]);
-  return result;
-}
-
-module.exports = { parseTextWithLLM, bookingConfirmation, bookEvent, getEvents, getEvent }; 
+module.exports = { parseTextWithLLM, getEvents }; 

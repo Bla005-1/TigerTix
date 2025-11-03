@@ -20,12 +20,12 @@ function App() {
   useEffect(() => { fetchEvents(); }, []);
  
   // Sends a POST request to purchase a ticket for a given event.
-  const buyTicket = (eventID, eventName) => { 
+  const buyTicket = (eventID, eventName, updateStatus=true) => { 
     fetch(`http://localhost:6001/api/events/${eventID}/purchase`, { method: 'POST' })
       .then(async (res) => {
         const body = await res.json().catch(() => ({}));
         if (res.ok) {
-          setStatusMessage(`Ticket purchased for: ${eventName}`);
+          if (updateStatus) setStatusMessage(`Ticket purchased for: ${eventName}`);
           fetchEvents();
         } else {
           const msg = body?.error || 'Purchase failed.';
@@ -40,7 +40,7 @@ function App() {
  
   return ( 
     <div className="App"> 
-      <header>
+      <header aria-labelledby="page-title">
         <h1 id="page-title">Clemson Campus Events</h1>
       </header>
 
