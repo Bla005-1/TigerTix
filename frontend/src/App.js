@@ -7,35 +7,45 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('');
  
   // Fetches all events from the client microservice and updates state.
-  const fetchEvents = () => {
-    fetch('http://localhost:6001/api/events') 
-      .then((res) => res.json()) 
-      .then((data) => setEvents(data)) 
-      .catch((err) => {
-        setEvents([]);
-        console.error(err);
-        setStatusMessage('Event loading failed.')
-      }); 
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch('http://localhost:6001/api/events');
+      if (!res.ok) {
+        throw new Error(`Failed to load events: ${res.status}`);
+      }
+      const data = await res.json();
+      setEvents(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setEvents([]);
+      console.error(err);
+      setStatusMessage('Event loading failed.');
+    }
   }; 
   useEffect(() => { fetchEvents(); }, []);
  
   // Sends a POST request to purchase a ticket for a given event.
-  const buyTicket = (eventID, eventName, updateStatus=true) => { 
-    fetch(`http://localhost:6001/api/events/${eventID}/purchase`, { method: 'POST' })
-      .then(async (res) => {
-        const body = await res.json().catch(() => ({}));
-        if (res.ok) {
-          if (updateStatus) setStatusMessage(`Ticket purchased for: ${eventName}`);
-          fetchEvents();
-        } else {
-          const msg = body?.error || 'Purchase failed.';
-          setStatusMessage(msg);
+  const buyTicket = async (eventID, eventName, updateStatus=true) => { 
+    try {
+      const res = await fetch(`http://localhost:6001/api/events/${eventID}/purchase`, { method: 'POST' });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok) {
+        if (updateStatus) setStatusMessage(`Ticket purchased for: ${eventName}`);
+        await fetchEvents();
+      } else {
+        const msg = body?.error || 'Purchase failed.';
+        setStatusMessage(msg);
+        if (res.status === 409) {
+          setEvents((prev) =>
+            prev.map((event) =>
+              event.id === eventID ? { ...event, tickets_available: 0 } : event
+            )
+          );
         }
-      })
-      .catch((err) => {
-        console.error(err);
-        setStatusMessage('Server error. Please try again.');
-      });
+      }
+    } catch (err) {
+      console.error(err);
+      setStatusMessage('Server error. Please try again.');
+    }
   }; 
  
   return ( 
