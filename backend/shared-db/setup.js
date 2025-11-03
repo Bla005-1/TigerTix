@@ -29,10 +29,18 @@ const get = (sql, params = []) =>
 
 const run = (sql, params = []) =>
   new Promise((resolve, reject) => {
+    db.run('BEGIN DEFERRED');
     db.run(sql, params, function (err) {
-      if (err) return reject(err);
+      if (err) {
+        console.log("checking here");
+        db.run('ROLLBACK', params, function (err) {
+          if (err) return reject(err);
+          resolve(this);
+        });
+        return reject(err);
+      } 
       resolve(this);
     });
+    db.run('COMMIT');
   });
-
 module.exports = { db, all, get, run, initDB }

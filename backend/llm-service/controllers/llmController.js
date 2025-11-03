@@ -1,6 +1,4 @@
 const { parseTextWithLLM, getEvents } = require('../models/llmModel');
-//const { confirmationButton } = require('../../../frontend/src/')
-
 
 /**
  * Handles request for parsing data with llm.

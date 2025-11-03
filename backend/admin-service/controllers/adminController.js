@@ -65,10 +65,10 @@ const newEvent = async (req, res, next) => {
     validateInput(req.body);
     const event = await addEvent(req.body);
     res.status(200).send('200: Successfully Added Event');
+    return event;
   } catch(err) {
     next(err)
   }
-  
 }
 
 /**
@@ -94,4 +94,4 @@ const patchEvent = async (req, res, next) => {
   }
 }
  
-module.exports = { listEvents, newEvent, patchEvent}; 
+module.exports = { listEvents, newEvent, patchEvent }; 
