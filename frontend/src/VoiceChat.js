@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './VoiceChat.css';
 /**
  * VoiceChat component
- * Handles speech input/output and interaction with the LLM microservice.
+ * Handles speech input/output and interaction with the LLM microservice
  */
 function VoiceChat({buyTicket, setStatusMessage}) {
   const [isRecording, setIsRecording] = useState(false);
@@ -73,7 +73,6 @@ function VoiceChat({buyTicket, setStatusMessage}) {
     handleRecognitionResult(transcript)
   };
 
-  // --- Step 3: Handle speech recognition result ---
   const handleRecognitionResult = async (text) => {
     const payload = (text || '').trim();
     if (!payload) return;
@@ -101,7 +100,6 @@ function VoiceChat({buyTicket, setStatusMessage}) {
     }
   };
 
-  // --- Step 4: Confirm booking ---
   const confirmBooking = async () => {
     try {
       const eventID = llmResponse?.event_id;
@@ -132,9 +130,9 @@ function VoiceChat({buyTicket, setStatusMessage}) {
 
       const utter = new SpeechSynthesisUtterance(String(text));
       utter.lang = 'en-US';
-      utter.rate = 1.0;   // natural pace for clarity
-      utter.pitch = 1.0;  // neutral tone
-      utter.volume = 1.0; // full volume, user controls system volume
+      utter.rate = 1.0;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
 
       const voices = synth.getVoices ? synth.getVoices() : [];
       const preferred = voices.find(v => v.lang === 'en-US')
@@ -150,21 +148,18 @@ function VoiceChat({buyTicket, setStatusMessage}) {
 
   return (
     <div className="voice-chat" aria-label="Voice Assistant">
-      {/* Transcript display */}
       <div className="transcript" aria-live="polite">
         {transcript || 'Press record and start speaking...'}
       </div>
-      {/* Confirmation UI */}
       {confirmationPending && (
         <div className="confirmation">
           {llmResponseText}
           <div className="confirmation-controls">
-          <button onClick={confirmBooking}>Confirm</button>
-          <button onClick={() => setConfirmationPending(false)}>Cancel</button>
+          <button onClick={confirmBooking} aria-label={llmResponseText}>Confirm</button>
+          <button onClick={() => setConfirmationPending(false)} aria-label="Cancel booking request">Cancel</button>
           </div>
         </div>
       )}
-      {/* Control buttons */}
       <div className="controls">
         {!isRecording ? (
           <button onClick={startRecording} aria-label="Start recording">
