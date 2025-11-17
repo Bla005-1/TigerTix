@@ -58,5 +58,4 @@ const parseTextWithLLM = async (text, events) => {
   return jsonData;
 }
 
-
 module.exports = { parseTextWithLLM, getEvents }; 
