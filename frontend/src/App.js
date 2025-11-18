@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './App.css';
+import { AuthContext } from './AuthContext';
 import VoiceChat from './VoiceChat';
+import Login from './Login';
+import Register from './Register';
 
 function App() { 
   const [events, setEvents] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
- 
+  const { user, logout } = useContext(AuthContext);
+  const [page, setPage] = useState('home');
+  const navigate = (p) => setPage(p);
+
   // Fetches all events from the client microservice and updates state.
   const fetchEvents = async () => {
     try {
@@ -46,12 +52,18 @@ function App() {
       console.error(err);
       setStatusMessage('Server error. Please try again.');
     }
-  }; 
- 
+  };
+
+  if (!user) {
+    if (page === 'register') return <Register navigate={navigate} />;
+    return <Login navigate={navigate} />;
+  }
+
   return ( 
     <div className="App"> 
       <header aria-labelledby="page-title">
         <h1 id="page-title">Clemson Campus Events</h1>
+        <button aria-label="Logout" onClick={logout}>Logout</button>
       </header>
 
       {statusMessage && (<div aria-live="polite" className="status">

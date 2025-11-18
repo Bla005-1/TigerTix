@@ -1,0 +1,25 @@
+.auth-form {
+  max-width: 400px;
+  width: 100%;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+}
+
+.auth-form .status {
+  background-color: #f56600;
+  color: white;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.auth-link {
+  margin-top: 1rem;
+}
