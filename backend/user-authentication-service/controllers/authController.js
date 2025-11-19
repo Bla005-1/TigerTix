@@ -58,8 +58,8 @@ const loginUser = async (req, res, next) => {
 
 const verifyUser = async (req, res, next) => {
     const authHeader = req.headers.authorization;
-    const JWT = authHeader?.split('Bearer ')[1];
-
+    const JWT = authHeader?.split('Bearer ');
+    console.log(JWT);
     const user = verifyJWT(JWT);
     console.log(user);
     res.user = user;

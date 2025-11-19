@@ -16,9 +16,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(user_name, password) {
+
     const res = await fetch('http://localhost:7001/login', {
       method: 'POST',
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", },
       body: JSON.stringify({ user_name, password })
     });
     console.log("HWERE")

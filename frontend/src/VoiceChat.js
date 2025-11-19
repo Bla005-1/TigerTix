@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './VoiceChat.css';
+import { AuthContext } from './AuthContext';
+
+const useAuth = () => {
+  return useContext(AuthContext);
+}
 /**
  * VoiceChat component
  * Handles speech input/output and interaction with the LLM microservice
@@ -77,9 +82,11 @@ function VoiceChat({buyTicket, setStatusMessage}) {
     const payload = (text || '').trim();
     if (!payload) return;
     try {
+      const { token } = useAuth;
       const res = await fetch('http://localhost:8001/api/llm/parse', {
         method: 'POST',
         body: payload,
+        headers: {"Authorization": `Bearer ${token}`}
       });
       if (!res.ok) throw new Error(`LLM parse failed: ${res.status}`);
       const obj = await res.json();

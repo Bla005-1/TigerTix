@@ -3,7 +3,7 @@ const router = express.Router();
 const { listEvents, purchaseTicket } = require('../controllers/clientController');
 const { verifyUser } = require('../../user-authentication-service/controllers/authController')
 
-//router.use(verifyUser);
+router.use(verifyUser);
  
 router.get('/events', listEvents); 
 
