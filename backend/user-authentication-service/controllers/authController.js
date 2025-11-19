@@ -1,15 +1,21 @@
-const { generateHash, storeUser, getHash, validatePassword, generateJWT, storeJWT } = require('../models/authModel');
+const { generateHash, storeUser, getHash, validatePassword, generateJWT, getUser, verifyJWT } = require('../models/authModel');
 
 const registerUser = async (req, res, next) => {
     try {
         const data = req.body;
         console.log("where are you??")
+        
+        if (await getUser(data.user_name) != 'NOT_FOUND') {
+            const error = new Error('User Name Already In Use!');
+            error.statusCode = 400;
+            throw error;
+        }
+
         const hash = await generateHash(data.password);
         const user = await storeUser(data.user_name, hash);
         console.log("where are you2??")
         if (user) {
-            res.json({message: "ok"}).status(200).send(`200: User ${data.user_name} Successfully Added`);
-            return JSON.stringify(req.body);
+            res.json(req.body).status(200);
         }
         else {
             const error = new Error('Failed To Register User');
@@ -27,15 +33,13 @@ const loginUser = async (req, res, next) => {
         const hash = await getHash(data.user_name);
         const valid = await validatePassword(data.password, hash);
         const token = await generateJWT(data.user_name);
-        const save = await storeJWT(token);
-
         if (!hash) {
             const error = new Error('Hash Error');
             error.statusCode = 500;
             throw error;
         }
         if (!valid) {
-            const error = new Error('Invalid Password');
+            const error = new Error('Invalid Credentials');
             error.statusCode = 400;
             throw error;
         }
@@ -44,19 +48,22 @@ const loginUser = async (req, res, next) => {
             error.statusCode = 500;
             throw error;
         }
-        if (save != "COOKIE LOADED") {
-            const error = new Error('Cookie Error');
-            error.statusCode = 500;
-            throw error;
-        }
-
-        console.log(user);
-        res.status(200).send(`200: User ${data.user_name} Logging In`);
-        return user;
+        res.authorization = 
+        res.json({token: token}).status(200);
 
     } catch(err) {
         next(err);
     }
 };
 
-module.exports = { registerUser, loginUser }
+const verifyUser = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const JWT = authHeader?.split('Bearer ')[1];
+
+    const user = verifyJWT(JWT);
+    console.log(user);
+    res.user = user;
+    next();
+}
+
+module.exports = { registerUser, loginUser, verifyUser }

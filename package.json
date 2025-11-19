@@ -2,6 +2,7 @@
   "dependencies": {
     "@google/genai": "^1.28.0",
     "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.2",
     "openai": "^6.7.0",
     "playwright": "^1.56.1",

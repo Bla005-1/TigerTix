@@ -21,8 +21,9 @@ export function AuthProvider({ children }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password })
     });
-
+    console.log("HWERE")
     const data = await res.json();
+    console.log(data, res)
 
     if (!res.ok) throw new Error(data.error);
 

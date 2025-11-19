@@ -1,6 +1,7 @@
 const { get, run } = require('../../shared-db/setup')
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken')
+require('dotenv').config()
 
 const validatePassword = async (password, hash) => {
     const valid = bcrypt.compare(password, hash);
@@ -21,25 +22,14 @@ const generateJWT = async (user_name) => {
 
     const token = JWT.sign(
         { username: user_name},
-        "cheese",
-        { expiresIn: "30m" }
+        process.env.HASH_KEY,
+        { expiresIn: "1m" }
     )
     return token;
 }
 
-const storeJWT = async (token, res) => {
-    try {
-        res.cookie("authToken", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-            maxAge: 1000 * 60 * 60 //1 hour 
-        });
-        return "COOKIE LOADED";
-
-    } catch (err) {
-        return err;
-    }
+const verifyJWT = async (token) => {
+    return JWT.verify(token, process.env.HASH_KEY);
 }
 
 const storeUser = async (user_name, hash) => {
@@ -48,12 +38,20 @@ const storeUser = async (user_name, hash) => {
     return post;
 }
 
+const getUser = async (user_name) => {
+    const user = await get('SELECT user_name FROM users WHERE user_name = ?;', [user_name,]);
+    console.log(user);
+    if (!user) return 'NOT_FOUND';
+    return user;
+}
+
 const getHash = async (user_name) => {
+    console.log(user_name)
     const hash = await get('SELECT hash FROM users WHERE user_name = ?;', [user_name,]);
     if (!hash) return 'NOT_FOUND';
 
     console.log(hash);
-    return hash;
+    return hash.hash;
 }
 
-module.exports = { validatePassword, generateHash, storeUser, getHash, generateJWT, storeJWT }
+module.exports = { validatePassword, generateHash, storeUser, getHash, getUser, generateJWT, verifyJWT }
