@@ -8,39 +8,43 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const t = localStorage.getItem('jwt');
-    const username = localStorage.getItem('username');
+    const user_name = localStorage.getItem('user_name');
     if (t) {
       setToken(t);
-      setUser(username);
+      setUser(user_name);
     }
   }, []);
 
-  async function login(username, password) {
+  async function login(user_name, password) {
     const res = await fetch('http://localhost:7001/login', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ user_name, password })
     });
 
     const data = await res.json();
 
     if (!res.ok) throw new Error(data.error);
 
-    setUser(username);
+    setUser(user_name);
     setToken(data.token);
 
     localStorage.setItem('jwt', data.token);
-    localStorage.setItem('username', username);
+    localStorage.setItem('user_name', user_name);
   }
 
-  async function register(username, password) {
+  async function register(user_name, password) {
+    console.log(user_name, password);
+    console.log(JSON.stringify({ user_name, password }));
     const res = await fetch('http://localhost:7001/register', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ user_name, password })
     });
-
+    console.log("WHAT")
+    
     const data = await res.json();
+    console.log(data, res)
 
     if (!res.ok) throw new Error(data.error);
 
@@ -51,7 +55,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setToken(null);
     localStorage.removeItem('jwt');
-    localStorage.removeItem('username');
+    localStorage.removeItem('user_name');
   }
 
   return (

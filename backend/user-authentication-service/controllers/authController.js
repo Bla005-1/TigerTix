@@ -3,13 +3,13 @@ const { generateHash, storeUser, getHash, validatePassword, generateJWT, storeJW
 const registerUser = async (req, res, next) => {
     try {
         const data = req.body;
+        console.log("where are you??")
         const hash = await generateHash(data.password);
         const user = await storeUser(data.user_name, hash);
-
+        console.log("where are you2??")
         if (user) {
-            console.log(user);
-            res.status(200).send(`200: User ${data.user_name} Successfully Added`);
-            return user;
+            res.json({message: "ok"}).status(200).send(`200: User ${data.user_name} Successfully Added`);
+            return JSON.stringify(req.body);
         }
         else {
             const error = new Error('Failed To Register User');
