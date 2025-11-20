@@ -68,6 +68,7 @@ function App() {
     <div className="App"> 
       <header aria-labelledby="page-title">
         <h1 id="page-title">Clemson Campus Events</h1>
+        <a id="current-user">Logged in as {user}</a>
         <button aria-label="Logout" onClick={logout}>Logout</button>
       </header>
 
