@@ -35,7 +35,7 @@ const generateJWT = async (user_name) => {
     const token = JWT.sign(
         { username: user_name},
         process.env.HASH_KEY,
-        { expiresIn: "30s" }
+        { expiresIn: "30m" }
     )
     return token;
 }
