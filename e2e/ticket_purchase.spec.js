@@ -17,27 +17,22 @@ test('user can log in and complete a ticket purchase end-to-end', async ({ page 
   // 1. Start at login page (App shows Login when user === null)
   await page.goto('/');
 
-  // Fill the login form (your actual selectors)
+  // Fill the login form
   await page.getByLabel('username').fill('testuser');
   await page.getByLabel('password').fill('testpass');
 
-  // Press login button (Login.js: <button>Login</button>)
   await page.getByRole('button', { name: /^login$/i }).click();
 
   await expect(
     page.getByRole('heading', { name: /Clemson Campus Events/i })
   ).toBeVisible();
 
-  // 2. Events load (App fetches them with Authorization: Bearer <token>)
+  // 2. Events load
   await expect(page.getByText(/tickets/i).first()).toBeVisible();
-
-  // 3. Grab Buy Ticket button (App uses aria-label="Buy ticket for NAME")
   const buyButton = page.getByRole('button', { name: /buy ticket for/i }).first();
-
-  // Click purchase
   await buyButton.click();
 
-  // 4. Status message appears (aria-live region)
+  // 4. Status message appears
   await expect(page.locator('.status')).toHaveText(/Ticket purchased/i);
 
   // 5. Reload to verify change persisted
