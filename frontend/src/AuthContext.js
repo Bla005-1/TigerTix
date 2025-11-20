@@ -5,7 +5,6 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  console.log("READY")
   useEffect(() => {
     const t = localStorage.getItem('jwt');
     const user_name = localStorage.getItem('user_name');
@@ -22,9 +21,7 @@ export function AuthProvider({ children }) {
       headers: { "Content-Type": "application/json", },
       body: JSON.stringify({ user_name, password })
     });
-    console.log("HWERE")
     const data = await res.json();
-    console.log(data, res)
 
     if (!res.ok) throw new Error(data.error);
 
@@ -36,17 +33,13 @@ export function AuthProvider({ children }) {
   }
 
   async function register(user_name, password) {
-    console.log(user_name, password);
-    console.log(JSON.stringify({ user_name, password }));
     const res = await fetch('http://localhost:7001/register', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password })
     });
-    console.log("WHAT")
     
     const data = await res.json();
-    console.log(data, res)
 
     if (!res.ok) throw new Error(data.error);
 
