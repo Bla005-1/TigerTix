@@ -13,7 +13,7 @@ const registerUser = async (req, res, next) => {
         const hash = await generateHash(data.password);
         const user = await storeUser(data.user_name, hash);
         if (user) {
-            res.json(req.body).status(200);
+            res.status(200).json(req.body);
         }
         else {
             const error = new Error('Failed To Register User');
@@ -48,7 +48,7 @@ const loginUser = async (req, res, next) => {
         }
         console.log('HIIII');
         console.log(token);
-        res.json({token: token}).status(200);
+        res.status(200).json({token: token});
     } catch(err) {
         next(err);
     }
