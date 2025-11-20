@@ -18,9 +18,6 @@ const getEvents = async () => {
  * @returns {Promise<Object>} A structured object with extracted booking details.
  */
 const parseTextWithLLM = async (text, events) => {
-  console.log("HERE ARE THE THINGS");
-  console.log(`${text}`);
-  console.log(`${events}`);
 
   const ai = new GoogleGenAI({});
   const response = await ai.models.generateContent({

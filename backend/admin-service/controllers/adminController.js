@@ -15,7 +15,6 @@ const validateInput = (details, hasId) => {
     throw error;
   }
   if (hasId == true && !eventDetails.hasOwnProperty('id')) {
-    console.log(hasId);
     const error = new Error('Missing required ID');
     error.statusCode = 400;
     throw error;

@@ -3,7 +3,6 @@ const { generateHash, storeUser, getHash, validatePassword, generateJWT, getUser
 const registerUser = async (req, res, next) => {
     try {
         const data = req.body;
-        console.log("where are you??")
         
         if (await getUser(data.user_name) != 'NOT_FOUND') {
             const error = new Error('User Name Already In Use!');
@@ -13,7 +12,6 @@ const registerUser = async (req, res, next) => {
 
         const hash = await generateHash(data.password);
         const user = await storeUser(data.user_name, hash);
-        console.log("where are you2??")
         if (user) {
             res.json(req.body).status(200);
         }
@@ -48,22 +46,28 @@ const loginUser = async (req, res, next) => {
             error.statusCode = 500;
             throw error;
         }
-        res.authorization = 
+        console.log('HIIII');
+        console.log(token);
         res.json({token: token}).status(200);
-
     } catch(err) {
         next(err);
     }
 };
 
 const verifyUser = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    const JWT = authHeader?.split('Bearer ');
-    console.log(JWT);
-    const user = verifyJWT(JWT);
-    console.log(user);
-    res.user = user;
-    next();
+    try {
+        const authHeader = req.headers.authorization;
+        const JWT = authHeader?.split('Bearer ')[1];
+        console.log("weee", JWT);
+        const user = await verifyJWT(JWT);
+        console.log(user);
+        res.user = user;
+        //res.json(res.user).status(200);
+        next();
+    } catch(err) {
+
+        next(err);
+    }
 }
 
 module.exports = { registerUser, loginUser, verifyUser }

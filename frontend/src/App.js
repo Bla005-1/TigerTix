@@ -5,21 +5,16 @@ import VoiceChat from './VoiceChat';
 import Login from './Login';
 import Register from './Register';
 
-const useAuth = () => {
-  return useContext(AuthContext);
-}
-
 function App() { 
   const [events, setEvents] = useState([]);
   const [statusMessage, setStatusMessage] = useState('');
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, token } = useContext(AuthContext);
   const [page, setPage] = useState('home');
   const navigate = (p) => setPage(p);
 
   // Fetches all events from the client microservice and updates state.
   const fetchEvents = async () => {
     try {
-      const { token } = useAuth;
       const res = await fetch('http://localhost:6001/api/events', 
         {headers: {"Authorization": `Bearer ${token}`}});
       if (!res.ok) {
@@ -33,12 +28,11 @@ function App() {
       setStatusMessage('Event loading failed.');
     }
   }; 
-  useEffect(() => { fetchEvents(); }, []);
+  useEffect(() => { fetchEvents() }, []);
  
   // Sends a POST request to purchase a ticket for a given event.
   const buyTicket = async (eventID, eventName, updateStatus=true) => { 
     try {
-      const { token } = useAuth;
       const res = await fetch(`http://localhost:6001/api/events/${eventID}/purchase`, 
         { method: 'POST', headers: {"Authorization": `Bearer ${token}`} });
       const body = await res.json().catch(() => ({}));
@@ -46,6 +40,9 @@ function App() {
         if (updateStatus) setStatusMessage(`Ticket purchased for: ${eventName}`);
         await fetchEvents();
       } else {
+        if (body?.error == "jwt expired") {
+          logout();
+        }
         const msg = body?.error || 'Purchase failed.';
         setStatusMessage(msg);
         if (res.status === 409) {

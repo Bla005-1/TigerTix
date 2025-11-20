@@ -17,7 +17,6 @@ const getEvents = async () => {
  */
 const addEvent = async (event) => {
   let sql = `INSERT INTO events (name, date, tickets_available) VALUES(?,?,?)`;
-  console.log(event);
   const post = await run(sql, [event.name, event.date, event.tickets_available])
   return post;
 }
@@ -30,7 +29,6 @@ const addEvent = async (event) => {
 const updateEvent = async (event) => {
   
   let sql = `UPDATE events SET name = ?, date = ?, tickets_available = ? WHERE id = ?`;
-  console.log(event);
   const put = await run(sql, [event.name, event.date, event.tickets_available, event.id])
   return put;
 }

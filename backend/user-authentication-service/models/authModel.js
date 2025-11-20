@@ -1,7 +1,8 @@
+
+console.log(process.env.HASH_KEY)
 const { get, run } = require('../../shared-db/setup')
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken')
-require('dotenv').config()
 
 const validatePassword = async (password, hash) => {
     const valid = bcrypt.compare(password, hash);
@@ -19,7 +20,7 @@ const generateHash = async (password) => {
 };
 
 const generateJWT = async (user_name) => {
-
+    console.log("here:", process.env.HASH_KEY);
     const token = JWT.sign(
         { username: user_name},
         process.env.HASH_KEY,
@@ -29,6 +30,7 @@ const generateJWT = async (user_name) => {
 }
 
 const verifyJWT = async (token) => {
+    console.log("WOW", process.env.HASH_KEY)
     return JWT.verify(token, process.env.HASH_KEY);
 }
 
