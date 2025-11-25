@@ -15,7 +15,7 @@ function App() {
   // Fetches all events from the client microservice and updates state.
   const fetchEvents = async () => {
     try {
-      const res = await fetch('http://localhost:6001/api/events', 
+      const res = await fetch(`${process.env.REACT_APP_CLIENT_URL}/api/events`, 
         {headers: {"Authorization": `Bearer ${token}`}});
       if (!res.ok) {
         throw new Error(`Failed to load events: ${res.status}`);
@@ -33,7 +33,7 @@ function App() {
   // Sends a POST request to purchase a ticket for a given event.
   const buyTicket = async (eventID, eventName, updateStatus=true) => { 
     try {
-      const res = await fetch(`http://localhost:6001/api/events/${eventID}/purchase`, 
+      const res = await fetch(`${process.env.REACT_APP_CLIENT_URL}/api/events/${eventID}/purchase`, 
         { method: 'POST', headers: {"Authorization": `Bearer ${token}`} });
       const body = await res.json().catch(() => ({}));
       if (res.ok) {

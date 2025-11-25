@@ -83,7 +83,7 @@ function VoiceChat({buyTicket, setStatusMessage}) {
     if (!payload) return;
     try {
       const { token } = useAuth;
-      const res = await fetch('http://localhost:8001/api/llm/parse', {
+      const res = await fetch(`${process.env.REACT_APP_LLM_URL}/api/llm/parse`, {
         method: 'POST',
         body: payload,
         headers: {"Authorization": `Bearer ${token}`}

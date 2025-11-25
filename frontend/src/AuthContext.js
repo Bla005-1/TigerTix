@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
 
   async function login(user_name, password) {
 
-    const res = await fetch('http://localhost:7001/login', {
+    const res = await fetch(`${process.env.REACT_APP_AUTH_URL}/login`, {
       method: 'POST',
       headers: { "Content-Type": "application/json", },
       body: JSON.stringify({ user_name, password })
@@ -33,7 +33,7 @@ export function AuthProvider({ children }) {
   }
 
   async function register(user_name, password) {
-    const res = await fetch('http://localhost:7001/register', {
+    const res = await fetch(`${process.env.REACT_APP_AUTH_URL}/register`, {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password })
