@@ -35,3 +35,5 @@ yarn-error.log*
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+one_off_init.js
