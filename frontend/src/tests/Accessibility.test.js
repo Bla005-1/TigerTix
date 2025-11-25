@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
+import { withMockAuth } from './mockAuth';
 
 describe('Accessibility Compliance', () => {
   test('each Buy Ticket button has descriptive aria-label', async () => {
@@ -14,7 +15,7 @@ describe('Accessibility Compliance', () => {
         json: () => Promise.resolve(mockEvents),
       })
     );
-    render(<App />);
+    render(withMockAuth(<App />));
     const buttons = await screen.findAllByRole('button', { name: /buy ticket/i });
     expect(buttons).toHaveLength(mockEvents.length);
     buttons.forEach((button, idx) => {
@@ -35,10 +36,14 @@ describe('Accessibility Compliance', () => {
       })
     );
     const user = userEvent;
-    render(<App />);
+    render(withMockAuth(<App />));
 
+    const logoutButton = await screen.findByRole('button', { name: /logout/i });
     const recordButton = await screen.findByRole('button', { name: /record/i });
     const buyButtons = await screen.findAllByRole('button', { name: /buy ticket/i });
+
+    await user.tab();
+    expect(logoutButton).toHaveFocus();
 
     await user.tab();
     expect(recordButton).toHaveFocus();

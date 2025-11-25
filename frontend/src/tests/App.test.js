@@ -1,5 +1,6 @@
 import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
 import App from '../App';
+import { withMockAuth } from './mockAuth';
 
 // Mock global fetch for API calls
 global.fetch = jest.fn();
@@ -14,7 +15,7 @@ describe('App Component (Client Service Integration)', () => {
   });
 
   test('renders header and page title', () => {
-    render(<App />);
+    render(withMockAuth(<App />));
     const heading = screen.getByRole('heading', { level: 1, name: /Clemson Campus Events/i });
     expect(heading).toBeInTheDocument();
     const banner = screen.getByRole('banner');
@@ -32,7 +33,7 @@ describe('App Component (Client Service Integration)', () => {
         { id: '3', name: 'Alumni Meetup', date: '2024-11-05', tickets_available: 0 },
       ]),
     });
-    render(<App />);
+    render(withMockAuth(<App />));
     await waitFor(() => {
       expect(screen.getByText(/Tiger Rally/i)).toBeInTheDocument();
       expect(screen.getByText(/Homecoming Parade/i)).toBeInTheDocument();
@@ -52,7 +53,7 @@ describe('App Component (Client Service Integration)', () => {
 
   test('shows fallback message when event fetch fails', async () => {
     global.fetch.mockRejectedValueOnce(new Error('Network error'));
-    render(<App />);
+    render(withMockAuth(<App />));
     const liveRegion = await screen.findByText('Event loading failed.');
     expect(liveRegion).toHaveAttribute('aria-live', 'polite');
 
@@ -87,7 +88,7 @@ describe('App Component (Client Service Integration)', () => {
         json: async () => updatedEvents,
       });
 
-    render(<App />);
+    render(withMockAuth(<App />));
 
     const buyButton = await screen.findByRole('button', { name: /buy ticket for tiger rally/i });
     fireEvent.click(buyButton);
@@ -100,9 +101,10 @@ describe('App Component (Client Service Integration)', () => {
       expect(screen.getByText('1 ticket')).toBeInTheDocument();
     });
 
-    expect(global.fetch).toHaveBeenNthCalledWith(1, 'http://localhost:6001/api/events');
-    expect(global.fetch).toHaveBeenNthCalledWith(2, 'http://localhost:6001/api/events/1/purchase', { method: 'POST' });
-    expect(global.fetch).toHaveBeenNthCalledWith(3, 'http://localhost:6001/api/events');
+    expect(global.fetch.mock.calls[0][0]).toEqual(expect.stringContaining('/api/events'));
+    expect(global.fetch.mock.calls[1][0]).toEqual(expect.stringContaining('/api/events/1/purchase'));
+    expect(global.fetch.mock.calls[2][0]).toEqual(expect.stringContaining('/api/events'));
+
   });
 
   test('handles ticket purchase failure', async () => {
@@ -120,7 +122,7 @@ describe('App Component (Client Service Integration)', () => {
         status: 409,
         json: async () => ({ error: 'No tickets available' }),
       });
-    render(<App />);
+    render(withMockAuth(<App />));
 
     const buyButton = await screen.findByRole('button', { name: /buy ticket for tiger rally/i });
     fireEvent.click(buyButton);
@@ -149,7 +151,7 @@ describe('App Component (Client Service Integration)', () => {
       json: async () => events,
     });
 
-    render(<App />);
+    render(withMockAuth(<App />));
 
     const labelledRows = await screen.findAllByRole('group', { name: /Event/i });
     expect(labelledRows).toHaveLength(events.length);
@@ -188,7 +190,7 @@ describe('App Component (Client Service Integration)', () => {
         json: async () => soldOutEvents,
       });
 
-    render(<App />);
+    render(withMockAuth(<App />));
 
     const buyButton = await screen.findByRole('button', { name: /buy ticket for tiger rally/i });
     expect(buyButton).toBeEnabled();

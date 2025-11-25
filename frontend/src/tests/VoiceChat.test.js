@@ -31,7 +31,7 @@ describe('VoiceChat Component (LLM + Voice Interface)', () => {
   test('renders initial interface with Record button', () => {
     render(<VoiceChat buyTicket={mockBuyTicket} setStatusMessage={mockSetStatus} />);
     expect(screen.getByRole('button', { name: /record/i })).toBeVisible();
-    expect(screen.getByText('Press record and start speaking...')).toBeVisible();
+    expect(screen.getByText('HI! Press record and start speaking...')).toBeVisible();
   });
 
   test('handles recognition result and displays confirmation', async () => {
