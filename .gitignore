@@ -37,3 +37,4 @@ yarn-error.log*
 /playwright/.auth/
 
 one_off_init.js
+test-results
