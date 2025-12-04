@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({path: path.resolve(process.cwd(), "../../.env")});
+require('dotenv').config({path: path.resolve(process.cwd(), "../.env")});
 const express = require('express');
 const cors = require('cors');
 const { initDB } = require('./shared-db/setup');
@@ -15,7 +15,7 @@ const auth = require('./user-authentication-service/routes/authRoutes');
 
 const PORT = 5001;
 
-console.log(process.env.CLIENT_ORIGIN)
+//console.log(process.env.CLIENT_ORIGIN)
 
 //app.use(cors());
 app.use(cors({
