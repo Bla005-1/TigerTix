@@ -39,7 +39,7 @@ const generateJWT = async (user_name) => {
     )
     return token;
 }
-
+//si
 /**
  * Compares the token with the jwt secret key
  * @param {string} token - The token string like amountofcharacters.amountofcharacters.amountofcharacters
