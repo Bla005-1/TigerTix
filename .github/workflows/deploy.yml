@@ -16,4 +16,4 @@ jobs:
       with:
         node-version: 20.x
     - run: npm ci
-    - run: npm start
+    - run: cd frontend && npm start
