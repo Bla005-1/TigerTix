@@ -1,0 +1,23 @@
+name: Node.js CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    container:
+      image: node:20
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm start
