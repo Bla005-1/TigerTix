@@ -19,7 +19,7 @@ const PORT = 5001;
 
 //app.use(cors());
 app.use(cors({
-  origin: `https://tiger-tix-neon.vercel.app`,
+  origin: process.env.CLIENT_ORIGIN || `https://tiger-tix-neon.vercel.app`,
   credentials: true
 }));
 app.use('/api', admin);
