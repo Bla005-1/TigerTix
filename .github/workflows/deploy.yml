@@ -19,9 +19,7 @@ jobs:
     - name: run backend
       working-directory: backend
       run: npm ci
-
-    - name: run admin
-      working-directory: backend/admin-service
+      run: cd admin-service
       run: node server.js
 
     - name: run client
